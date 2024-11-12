@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let move;
         for (let i = 0; i < boardArray.length; i++) {
             if (boardArray[i] === "") {
-                boardArray[i] = currentPlayer;
+                boardArray[i] = "O"; // AI is "O"
                 let score = minimax(boardArray, 0, false);
                 boardArray[i] = "";
                 if (score > bestScore) {
