@@ -82,36 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function aiMove() {
-        if (!gameInProgress) return; // Avoid AI move if game is over
-
-        let emptyCells = boardArray.map((val, index) => val === "" ? index : null).filter(val => val !== null);
-        if (emptyCells.length > 0 && !checkWinner()) {
-            let moveIndex;
-            if (difficulty === "easy") {
-                moveIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-            } else if (difficulty === "hard") {
-                moveIndex = getBestMove();
-            }
-            boardArray[moveIndex] = currentPlayer;
-            board.children[moveIndex].textContent = currentPlayer;
-
-            // Check for winner after the AI's move
-            const winner = checkWinner();
-            if (winner) {
-                gameInProgress = false; // Stop the game when there's a winner or tie
-                if (winner === "Tie") {
-                    result.textContent = "It's a tie!";
-                } else {
-                    result.textContent = `${winner} wins!`;
-                }
-            } else {
-                // Switch player after the AI move
-                currentPlayer = "X";  // Switch to player X after AI's turn
-                currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
-            }
-        }
-    }
+   
 
     function getBestMove() {
         let bestScore = -Infinity;
