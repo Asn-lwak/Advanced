@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let boardArray = ["", "", "", "", "", "", "", "", ""];
     let difficulty = new URLSearchParams(window.location.search).get("difficulty") || "easy";
     let isSinglePlayer = window.location.search.includes("difficulty");
+    let gameInProgress = true; // Track whether the game is in progress or not
 
     // Set background color based on difficulty
     if (difficulty === "hard") {
@@ -21,39 +22,38 @@ document.addEventListener("DOMContentLoaded", function () {
     currentPlayerDisplay.style.display = "none";
 
     function checkWinner() {
-    const winPatterns = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6],
-    ];
+        const winPatterns = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+        ];
 
-    for (let pattern of winPatterns) {
-        const [a, b, c] = pattern;
-        if (boardArray[a] && boardArray[a] === boardArray[b] && boardArray[a] === boardArray[c]) {
-            // Highlight winning cells with green only if there's a valid winner
-            if (boardArray[a] === "X" || boardArray[a] === "O") {
+        for (let pattern of winPatterns) {
+            const [a, b, c] = pattern;
+            if (boardArray[a] && boardArray[a] === boardArray[b] && boardArray[a] === boardArray[c]) {
+                // Highlight winning cells with green only if there's a valid winner
                 board.children[a].style.backgroundColor = "#32cd32";
                 board.children[b].style.backgroundColor = "#32cd32";
                 board.children[c].style.backgroundColor = "#32cd32";
+                return boardArray[a]; // Return the winner ("X" or "O")
             }
-            return boardArray[a]; // Return the winner ("X" or "O")
         }
-    }
 
-    if (boardArray.includes("")) {
-        return null; // No winner yet, continue the game
-    }
+        if (boardArray.includes("")) {
+            return null; // No winner yet, continue the game
+        }
 
-    return "Tie"; // All cells are filled, it's a tie
-}
-    
+        return "Tie"; // All cells are filled, it's a tie
+    }
 
     function handleClick(event) {
+        if (!gameInProgress) return; // Prevent clicks when the game is over
+
         const cell = event.target;
         const cellIndex = Array.from(board.children).indexOf(cell);
 
@@ -63,6 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const winner = checkWinner();
             if (winner) {
+                gameInProgress = false; // Stop the game when there's a winner or tie
                 if (winner === "Tie") {
                     result.textContent = "It's a tie!";
                 } else {
@@ -82,33 +83,34 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function aiMove() {
-    let emptyCells = boardArray.map((val, index) => val === "" ? index : null).filter(val => val !== null);
-    if (emptyCells.length > 0 && !checkWinner()) {
-        let moveIndex;
-        if (difficulty === "easy") {
-            moveIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-        } else if (difficulty === "hard") {
-            moveIndex = getBestMove();
-        }
-        boardArray[moveIndex] = currentPlayer;
-        board.children[moveIndex].textContent = currentPlayer;
-
-        // Check for winner after the AI's move
-        const winner = checkWinner();
-        if (winner) {
-            if (winner === "Tie") {
-                result.textContent = "It's a tie!";
-            } else {
-                result.textContent = `${winner} wins!`;
+        let emptyCells = boardArray.map((val, index) => val === "" ? index : null).filter(val => val !== null);
+        if (emptyCells.length > 0 && !checkWinner()) {
+            let moveIndex;
+            if (difficulty === "easy") {
+                moveIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+            } else if (difficulty === "hard") {
+                moveIndex = getBestMove();
             }
-        } else {
-            // Switch player after the AI move
-            currentPlayer = "X";
-            currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
+            boardArray[moveIndex] = currentPlayer;
+            board.children[moveIndex].textContent = currentPlayer;
+
+            // Check for winner after the AI's move
+            const winner = checkWinner();
+            if (winner) {
+                gameInProgress = false; // Stop the game when there's a winner or tie
+                if (winner === "Tie") {
+                    result.textContent = "It's a tie!";
+                } else {
+                    result.textContent = `${winner} wins!`;
+                }
+            } else {
+                // Switch player after the AI move
+                currentPlayer = "X";
+                currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
+            }
         }
     }
-}
-    
+
     function getBestMove() {
         let bestScore = -Infinity;
         let move;
@@ -168,6 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
         result.textContent = "";
         currentPlayer = "X";
         currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
+        gameInProgress = true; // Reset game state to in-progress
         currentPlayerDisplay.style.display = "block"; // Show current player display when game starts
 
         while (board.firstChild) {
@@ -189,6 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {
             result.textContent = "";
             currentPlayer = "X";
             currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
+            gameInProgress = true; // Set game state back to in-progress
 
             Array.from(board.children).forEach(cell => {
                 cell.textContent = "";
