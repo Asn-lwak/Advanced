@@ -10,6 +10,13 @@ document.addEventListener("DOMContentLoaded", function () {
     let difficulty = new URLSearchParams(window.location.search).get("difficulty") || "easy";
     let isSinglePlayer = window.location.search.includes("difficulty");
 
+    // Set background color based on difficulty
+    if (difficulty === "hard") {
+        document.body.style.backgroundColor = 'green'; // Change this to your desired color
+    } else {
+        document.body.style.backgroundColor = 'white'; // Default color for other modes
+    }
+
     // Hide the current player display initially
     currentPlayerDisplay.style.display = "none";
 
