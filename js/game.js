@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Set background color based on difficulty
     if (difficulty === "hard") {
-        document.body.style.backgroundColor = 'white'; // Change this to your desired color
+        document.body.style.backgroundColor = 'white'; // Change this to your desired color for hard mode
     } else {
         document.body.style.backgroundColor = 'white'; // Default color for other modes
     }
@@ -96,10 +96,10 @@ document.addEventListener("DOMContentLoaded", function () {
             boardArray[moveIndex] = currentPlayer;
             board.children[moveIndex].textContent = currentPlayer;
 
-            // Check for winner after the AI's move
+            // After the AI's move, check for winner
             const winner = checkWinner();
             if (winner) {
-                gameInProgress = false; // Stop the game when there's a winner or tie
+                gameInProgress = false;
                 if (winner === "Tie") {
                     result.textContent = "It's a tie!";
                 } else {
