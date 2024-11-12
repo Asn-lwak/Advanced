@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const cell = event.target;
         const cellIndex = Array.from(board.children).indexOf(cell);
 
-        if (boardArray[cellIndex] === "" && !checkWinner()) {
+        if (boardArray[cellIndex] === "") {
             boardArray[cellIndex] = currentPlayer;
             cell.textContent = currentPlayer;
 
@@ -83,6 +83,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function aiMove() {
+        if (!gameInProgress) return; // Avoid AI move if game is over
+
         let emptyCells = boardArray.map((val, index) => val === "" ? index : null).filter(val => val !== null);
         if (emptyCells.length > 0 && !checkWinner()) {
             let moveIndex;
@@ -105,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             } else {
                 // Switch player after the AI move
-                currentPlayer = "X";
+                currentPlayer = "X";  // Switch to player X after AI's turn
                 currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
             }
         }
@@ -198,6 +200,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 cell.textContent = "";
                 cell.style.backgroundColor = "";
             });
+
+            currentPlayerDisplay.style.display = "block"; // Ensure it's visible after reset
         }
     }
 
