@@ -82,4 +82,68 @@ document.addEventListener("DOMContentLoaded", function () {
                 moveIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
             } else if (difficulty === "medium") {
                 // Implement medium difficulty logic here
-                moveIndex = emptyCells[Math.floor(Math.random() * emptyCells
+                moveIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+            } else if (difficulty === "hard") {
+                // Implement hard difficulty logic here
+                moveIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+            }
+            boardArray[moveIndex] = currentPlayer;
+            board.children[moveIndex].textContent = currentPlayer;
+
+            const winner = checkWinner();
+            if (winner) {
+                if (winner === "Tie") {
+                    result.textContent = "It's a tie!";
+                } else {
+                    result.textContent = `${winner} wins!`;
+                }
+            } else {
+                currentPlayer = "X";
+                currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
+            }
+        }
+    }
+
+    function startGame() {
+        logMessage("Starting game...");
+        boardArray = ["", "", "", "", "", "", "", "", ""];
+        result.textContent = "";
+        currentPlayer = "X";
+        currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
+        currentPlayerDisplay.style.display = "block"; // Show current player display when game starts
+
+        while (board.firstChild) {
+            board.removeChild(board.firstChild);
+        }
+
+        for (let i = 0; i < 9; i++) {
+            const cell = document.createElement("div");
+            cell.classList.add("cell");
+            cell.addEventListener("click", handleClick);
+            board.appendChild(cell);
+        }
+    }
+
+    function resetGame() {
+        const confirmReset = window.confirm("Are you sure you want to reset the game?");
+        if (confirmReset) {
+            logMessage("Game reset");
+            boardArray = ["", "", "", "", "", "", "", "", ""];
+            result.textContent = "";
+            currentPlayer = "X";
+            currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
+
+            Array.from(board.children).forEach(cell => {
+                cell.textContent = "";
+                cell.style.backgroundColor = "";
+            });
+        }
+    }
+
+    startButton.addEventListener("click", startGame);
+    resetButton.addEventListener("click", resetGame);
+
+    backButton.addEventListener("click", function () {
+        window.location.href = "mode-selection.html";
+    });
+});
