@@ -75,10 +75,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (difficulty === "easy") {
             let emptyCells = boardArray.map((val, index) => val === "" ? index : null).filter(val => val !== null);
             bestMove = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-        } else if (difficulty === "medium") {
-            // Implement medium difficulty logic here
-            let emptyCells = boardArray.map((val, index) => val === "" ? index : null).filter(val => val !== null);
-            bestMove = emptyCells[Math.floor(Math.random() * emptyCells.length)];
         } else if (difficulty === "hard") {
             bestMove = getBestMove();
         }
@@ -190,6 +186,6 @@ document.addEventListener("DOMContentLoaded", function () {
     resetButton.addEventListener("click", resetGame);
 
     backButton.addEventListener("click", function () {
-        window.location.href = "mode-selection.html";
+        window.history.back();
     });
 });
