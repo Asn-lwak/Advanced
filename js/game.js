@@ -8,14 +8,10 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentPlayer = "X";
     let boardArray = ["", "", "", "", "", "", "", "", ""];
     let difficulty = new URLSearchParams(window.location.search).get("difficulty") || "easy";
+    let isSinglePlayer = difficulty !== "two";
 
     // Hide the current player display initially
     currentPlayerDisplay.style.display = "none";
-
-    function logMessage(message) {
-        console.log(message);
-        alert(message); // Use alerts to ensure messages are seen
-    }
 
     function checkWinner() {
         const winPatterns = [
@@ -62,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     result.textContent = `${winner} wins!`;
                 }
             } else {
-                if (difficulty !== "two") {
+                if (isSinglePlayer) {
                     currentPlayer = "O";
                     currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
                     aiMove();
@@ -105,7 +101,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function startGame() {
-        logMessage("Starting game...");
         boardArray = ["", "", "", "", "", "", "", "", ""];
         result.textContent = "";
         currentPlayer = "X";
@@ -127,7 +122,6 @@ document.addEventListener("DOMContentLoaded", function () {
     function resetGame() {
         const confirmReset = window.confirm("Are you sure you want to reset the game?");
         if (confirmReset) {
-            logMessage("Game reset");
             boardArray = ["", "", "", "", "", "", "", "", ""];
             result.textContent = "";
             currentPlayer = "X";
