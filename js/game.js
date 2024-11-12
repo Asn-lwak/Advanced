@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentPlayer = "X";
     let boardArray = ["", "", "", "", "", "", "", "", ""];
     let difficulty = new URLSearchParams(window.location.search).get("difficulty") || "easy";
-    let isSinglePlayer = difficulty !== "two";
+    let isSinglePlayer = window.location.search.includes("difficulty");
 
     // Hide the current player display initially
     currentPlayerDisplay.style.display = "none";
