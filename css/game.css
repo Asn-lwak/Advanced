@@ -1,0 +1,29 @@
+/* Import common styles */
+@import url('styles.css');
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 5px;
+    margin-top: 20px;
+}
+
+.board div {
+    background-color: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    border: 1px solid #000;
+    transition: background-color 0.3s;
+}
+
+.board div:hover {
+    background-color: #ddd;
+}
+
+#current-player, #result {
+    margin-top: 20px;
+    font-size: 18px;
+}
