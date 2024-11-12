@@ -21,33 +21,37 @@ document.addEventListener("DOMContentLoaded", function () {
     currentPlayerDisplay.style.display = "none";
 
     function checkWinner() {
-        const winPatterns = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            [0, 4, 8],
-            [2, 4, 6],
-        ];
+    const winPatterns = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+    ];
 
-        for (let pattern of winPatterns) {
-            const [a, b, c] = pattern;
-            if (boardArray[a] && boardArray[a] === boardArray[b] && boardArray[a] === boardArray[c]) {
+    for (let pattern of winPatterns) {
+        const [a, b, c] = pattern;
+        if (boardArray[a] && boardArray[a] === boardArray[b] && boardArray[a] === boardArray[c]) {
+            // Highlight winning cells with green only if there's a valid winner
+            if (boardArray[a] === "X" || boardArray[a] === "O") {
                 board.children[a].style.backgroundColor = "#32cd32";
                 board.children[b].style.backgroundColor = "#32cd32";
                 board.children[c].style.backgroundColor = "#32cd32";
-                return boardArray[a];
             }
+            return boardArray[a]; // Return the winner ("X" or "O")
         }
-
-        if (boardArray.includes("")) {
-            return null;
-        }
-
-        return "Tie";
     }
+
+    if (boardArray.includes("")) {
+        return null; // No winner yet, continue the game
+    }
+
+    return "Tie"; // All cells are filled, it's a tie
+}
+    
 
     function handleClick(event) {
         const cell = event.target;
@@ -78,31 +82,33 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function aiMove() {
-        let emptyCells = boardArray.map((val, index) => val === "" ? index : null).filter(val => val !== null);
-        if (emptyCells.length > 0 && !checkWinner()) {
-            let moveIndex;
-            if (difficulty === "easy") {
-                moveIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-            } else if (difficulty === "hard") {
-                moveIndex = getBestMove();
-            }
-            boardArray[moveIndex] = currentPlayer;
-            board.children[moveIndex].textContent = currentPlayer;
+    let emptyCells = boardArray.map((val, index) => val === "" ? index : null).filter(val => val !== null);
+    if (emptyCells.length > 0 && !checkWinner()) {
+        let moveIndex;
+        if (difficulty === "easy") {
+            moveIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+        } else if (difficulty === "hard") {
+            moveIndex = getBestMove();
+        }
+        boardArray[moveIndex] = currentPlayer;
+        board.children[moveIndex].textContent = currentPlayer;
 
-            const winner = checkWinner();
-            if (winner) {
-                if (winner === "Tie") {
-                    result.textContent = "It's a tie!";
-                } else {
-                    result.textContent = `${winner} wins!`;
-                }
+        // Check for winner after the AI's move
+        const winner = checkWinner();
+        if (winner) {
+            if (winner === "Tie") {
+                result.textContent = "It's a tie!";
             } else {
-                currentPlayer = "X";
-                currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
+                result.textContent = `${winner} wins!`;
             }
+        } else {
+            // Switch player after the AI move
+            currentPlayer = "X";
+            currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
         }
     }
-
+}
+    
     function getBestMove() {
         let bestScore = -Infinity;
         let move;
