@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Function to check the winner
     function checkWinner() {
-    function checkWinner() {
     const winPatterns = [
         [0, 1, 2],
         [3, 4, 5],
