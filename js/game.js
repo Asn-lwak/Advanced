@@ -122,9 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
             Tie: 0
         };
 
-        let result = checkWinner();
-        if (result !== null) {
-            return scores[result];
+
         }
 
         if (isMaximizing) {
