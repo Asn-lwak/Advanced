@@ -7,15 +7,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const currentPlayerDisplay = document.getElementById("current-player");
     let currentPlayer = "X";
     let boardArray = ["", "", "", "", "", "", "", "", ""];
+    let difficulty = new URLSearchParams(window.location.search).get("difficulty") || "easy"; // Default to "easy"
     let isSinglePlayer = window.location.search.includes("difficulty");
     let gameInProgress = true; // Track whether the game is in progress or not
 
-    // Set background color for the easy difficulty mode
-    document.body.style.backgroundColor = 'white'; // Default color for easy mode
+    // Set background color based on difficulty
+    if (difficulty === "hard") {
+        document.body.style.backgroundColor = 'lightblue'; // Example color for hard mode
+    } else {
+        document.body.style.backgroundColor = 'white'; // Default color for easy mode
+    }
 
     // Hide the current player display initially
     currentPlayerDisplay.style.display = "none";
 
+    // Function to check the winner
     function checkWinner() {
         const winPatterns = [
             [0, 1, 2],
@@ -46,6 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return "Tie"; // All cells are filled, it's a tie
     }
 
+    // Function to handle a click on the board
     function handleClick(event) {
         if (!gameInProgress) return; // Prevent clicks when the game is over
 
@@ -68,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (isSinglePlayer) {
                     currentPlayer = "O";
                     currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
-                    aiMove();
+                    aiMove(); // Make AI move after player's move
                 } else {
                     currentPlayer = currentPlayer === "X" ? "O" : "X";
                     currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
@@ -77,13 +84,21 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // AI makes a move
     function aiMove() {
         if (!gameInProgress) return; // Avoid AI move if game is over
 
         let emptyCells = boardArray.map((val, index) => val === "" ? index : null).filter(val => val !== null);
         if (emptyCells.length > 0 && !checkWinner()) {
-            // AI move for easy difficulty
-            let moveIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+            let moveIndex;
+            if (difficulty === "easy") {
+                // Easy AI: Random move
+                moveIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+            } else if (difficulty === "hard") {
+                // Hard AI: Best move using minimax
+                moveIndex = getBestMove();
+            }
+
             boardArray[moveIndex] = currentPlayer;
             board.children[moveIndex].textContent = currentPlayer;
 
@@ -104,6 +119,63 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // Minimax algorithm for the "hard" difficulty AI
+    function getBestMove() {
+        let bestScore = -Infinity;
+        let move;
+        for (let i = 0; i < boardArray.length; i++) {
+            if (boardArray[i] === "") {
+                boardArray[i] = "O"; // AI is "O"
+                let score = minimax(boardArray, 0, false);
+                boardArray[i] = "";
+                if (score > bestScore) {
+                    bestScore = score;
+                    move = i;
+                }
+            }
+        }
+        return move;
+    }
+
+    // Minimax algorithm to calculate the best score
+    function minimax(board, depth, isMaximizing) {
+        let scores = {
+            X: -1,
+            O: 1,
+            Tie: 0
+        };
+
+        let result = checkWinner();
+        if (result !== null) {
+            return scores[result];
+        }
+
+        if (isMaximizing) {
+            let bestScore = -Infinity;
+            for (let i = 0; i < board.length; i++) {
+                if (board[i] === "") {
+                    board[i] = "O";
+                    let score = minimax(board, depth + 1, false);
+                    board[i] = "";
+                    bestScore = Math.max(score, bestScore);
+                }
+            }
+            return bestScore;
+        } else {
+            let bestScore = Infinity;
+            for (let i = 0; i < board.length; i++) {
+                if (board[i] === "") {
+                    board[i] = "X";
+                    let score = minimax(board, depth + 1, true);
+                    board[i] = "";
+                    bestScore = Math.min(score, bestScore);
+                }
+            }
+            return bestScore;
+        }
+    }
+
+    // Function to start the game
     function startGame() {
         boardArray = ["", "", "", "", "", "", "", "", ""];
         result.textContent = "";
@@ -124,6 +196,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // Function to reset the game
     function resetGame() {
         const confirmReset = window.confirm("Are you sure you want to reset the game?");
         if (confirmReset) {
