@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (isSinglePlayer) {
                 currentPlayer = "O";
                 currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
-                aiMove();
+                setTimeout(aiMove, 500); // Delay AI move to ensure only one move per turn
             } else {
                 currentPlayer = currentPlayer === "X" ? "O" : "X";
                 currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
