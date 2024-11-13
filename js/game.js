@@ -45,25 +45,8 @@ document.addEventListener("DOMContentLoaded", function () {
         return "Tie";
     }
 
-    function endTurn() {
-        const winner = checkWinner();
-        if (winner) {
-            gameInProgress = false;
-            result.textContent = winner === "Tie" ? "It's a tie!" : `${winner} wins!`;
-        } else {
-            if (isSinglePlayer) {
-                currentPlayer = "O";
-                currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
-                setTimeout(aiMove, 500); // Delay AI move to ensure only one move per turn
-            } else {
-                currentPlayer = currentPlayer === "X" ? "O" : "X";
-                currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
-            }
-        }
-    }
-
     function handleClick(event) {
-        if (!gameInProgress || currentPlayer === "O") return; // Ensure it's the player's turn
+        if (!gameInProgress) return;
 
         const cell = event.target;
         const cellIndex = Array.from(board.children).indexOf(cell);
@@ -71,12 +54,26 @@ document.addEventListener("DOMContentLoaded", function () {
         if (boardArray[cellIndex] === "") {
             boardArray[cellIndex] = currentPlayer;
             cell.textContent = currentPlayer;
-            endTurn();
+
+            const winner = checkWinner();
+            if (winner) {
+                gameInProgress = false;
+                result.textContent = winner === "Tie" ? "It's a tie!" : `${winner} wins!`;
+            } else {
+                if (isSinglePlayer) {
+                    currentPlayer = "O";
+                    currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
+                    aiMove();
+                } else {
+                    currentPlayer = currentPlayer === "X" ? "O" : "X";
+                    currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
+                }
+            }
         }
     }
 
     function aiMove() {
-        if (!gameInProgress || currentPlayer === "X") return; // Ensure it's the AI's turn
+        if (!gameInProgress) return;
 
         let emptyCells = boardArray.map((val, index) => val === "" ? index : null).filter(val => val !== null);
         if (emptyCells.length > 0 && !checkWinner()) {
@@ -88,7 +85,15 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             boardArray[moveIndex] = currentPlayer;
             board.children[moveIndex].textContent = currentPlayer;
-            endTurn();
+
+            const winner = checkWinner();
+            if (winner) {
+                gameInProgress = false;
+                result.textContent = winner === "Tie" ? "It's a tie!" : `${winner} wins!`;
+            } else {
+                currentPlayer = "X";
+                currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
+            }
         }
     }
 
