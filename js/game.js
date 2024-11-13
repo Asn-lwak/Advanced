@@ -7,16 +7,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const currentPlayerDisplay = document.getElementById("current-player");
     let currentPlayer = "X";
     let boardArray = ["", "", "", "", "", "", "", "", ""];
-    let difficulty = new URLSearchParams(window.location.search).get("difficulty") || "easy";
     let isSinglePlayer = window.location.search.includes("difficulty");
     let gameInProgress = true; // Track whether the game is in progress or not
 
-    // Set background color based on difficulty
-    if (difficulty === "hard") {
-        document.body.style.backgroundColor = 'white'; // Change this to your desired color for hard mode
-    } else {
-        document.body.style.backgroundColor = 'white'; // Default color for other modes
-    }
+    // Set background color for the easy difficulty mode
+    document.body.style.backgroundColor = 'white'; // Default color for easy mode
 
     // Hide the current player display initially
     currentPlayerDisplay.style.display = "none";
@@ -87,12 +82,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let emptyCells = boardArray.map((val, index) => val === "" ? index : null).filter(val => val !== null);
         if (emptyCells.length > 0 && !checkWinner()) {
-            let moveIndex;
-            if (difficulty === "easy") {
-                moveIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-            } else if (difficulty === "hard") {
-                moveIndex = getBestMove();
-            }
+            // AI move for easy difficulty
+            let moveIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
             boardArray[moveIndex] = currentPlayer;
             board.children[moveIndex].textContent = currentPlayer;
 
@@ -110,60 +101,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 currentPlayer = "X";  // Switch to player X after AI's turn
                 currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
             }
-        }
-    }
-
-    function getBestMove() {
-        let bestScore = -Infinity;
-        let move;
-        for (let i = 0; i < boardArray.length; i++) {
-            if (boardArray[i] === "") {
-                boardArray[i] = "O"; // AI is "O"
-                let score = minimax(boardArray, 0, false);
-                boardArray[i] = "";
-                if (score > bestScore) {
-                    bestScore = score;
-                    move = i;
-                }
-            }
-        }
-        return move;
-    }
-
-    function minimax(board, depth, isMaximizing) {
-        let scores = {
-            X: -1,
-            O: 1,
-            Tie: 0
-        };
-
-        let result = checkWinner();
-        if (result !== null) {
-            return scores[result];
-        }
-
-        if (isMaximizing) {
-            let bestScore = -Infinity;
-            for (let i = 0; i < board.length; i++) {
-                if (board[i] === "") {
-                    board[i] = "O";
-                    let score = minimax(board, depth + 1, false);
-                    board[i] = "";
-                    bestScore = Math.max(score, bestScore);
-                }
-            }
-            return bestScore;
-        } else {
-            let bestScore = Infinity;
-            for (let i = 0; i < board.length; i++) {
-                if (board[i] === "") {
-                    board[i] = "X";
-                    let score = minimax(board, depth + 1, true);
-                    board[i] = "";
-                    bestScore = Math.min(score, bestScore);
-                }
-            }
-            return bestScore;
         }
     }
 
