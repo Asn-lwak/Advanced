@@ -12,6 +12,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     backButton.addEventListener("click", function () {
-        window.location.href = "welcome.html";
+        window.history.back();
     });
 });
