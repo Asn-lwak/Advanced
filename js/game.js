@@ -23,34 +23,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Function to check the winner
     function checkWinner() {
-        const winPatterns = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            [0, 4, 8],
-            [2, 4, 6],
-        ];
+    function checkWinner() {
+    const winPatterns = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+    ];
 
-        for (let pattern of winPatterns) {
-            const [a, b, c] = pattern;
-            if (boardArray[a] && boardArray[a] === boardArray[b] && boardArray[a] === boardArray[c]) {
-                // Highlight winning cells with green only if there's a valid winner
-                board.children[a].style.backgroundColor = "#32cd32";
-                board.children[b].style.backgroundColor = "#32cd32";
-                board.children[c].style.backgroundColor = "#32cd32";
-                return boardArray[a]; // Return the winner ("X" or "O")
-            }
+    for (let pattern of winPatterns) {
+        const [a, b, c] = pattern;
+        if (boardArray[a] && boardArray[a] === boardArray[b] && boardArray[a] === boardArray[c]) {
+            // Highlight winning cells with green only if there's a valid winner
+            board.children[a].style.backgroundColor = "#32cd32";
+            board.children[b].style.backgroundColor = "#32cd32";
+            board.children[c].style.backgroundColor = "#32cd32";
+            return boardArray[a]; // Return the winner ("X" or "O")
         }
-
-        if (boardArray.includes("")) {
-            return null; // No winner yet, continue the game
-        }
-
-        return "Tie"; // All cells are filled, it's a tie
     }
+
+    if (boardArray.includes("")) {
+        return null; // No winner yet, continue the game
+    }
+
+    return "Tie"; // All cells are filled, it's a tie
+}
+
 
     // Function to handle a click on the board
     function handleClick(event) {
