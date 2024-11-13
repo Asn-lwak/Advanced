@@ -45,6 +45,23 @@ document.addEventListener("DOMContentLoaded", function () {
         return "Tie";
     }
 
+    function endTurn() {
+        const winner = checkWinner();
+        if (winner) {
+            gameInProgress = false;
+            result.textContent = winner === "Tie" ? "It's a tie!" : `${winner} wins!`;
+        } else {
+            if (isSinglePlayer) {
+                currentPlayer = "O";
+                currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
+                aiMove();
+            } else {
+                currentPlayer = currentPlayer === "X" ? "O" : "X";
+                currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
+            }
+        }
+    }
+
     function handleClick(event) {
         if (!gameInProgress) return;
 
@@ -54,21 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (boardArray[cellIndex] === "") {
             boardArray[cellIndex] = currentPlayer;
             cell.textContent = currentPlayer;
-
-            const winner = checkWinner();
-            if (winner) {
-                gameInProgress = false;
-                result.textContent = winner === "Tie" ? "It's a tie!" : `${winner} wins!`;
-            } else {
-                if (isSinglePlayer) {
-                    currentPlayer = "O";
-                    currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
-                    aiMove();
-                } else {
-                    currentPlayer = currentPlayer === "X" ? "O" : "X";
-                    currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
-                }
-            }
+            endTurn();
         }
     }
 
@@ -85,15 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             boardArray[moveIndex] = currentPlayer;
             board.children[moveIndex].textContent = currentPlayer;
-
-            const winner = checkWinner();
-            if (winner) {
-                gameInProgress = false;
-                result.textContent = winner === "Tie" ? "It's a tie!" : `${winner} wins!`;
-            } else {
-                currentPlayer = "X";
-                currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
-            }
+            endTurn();
         }
     }
 
