@@ -9,14 +9,10 @@ document.addEventListener("DOMContentLoaded", function () {
     let boardArray = ["", "", "", "", "", "", "", "", ""];
     let difficulty = new URLSearchParams(window.location.search).get("difficulty") || "easy";
     let isSinglePlayer = window.location.search.includes("difficulty");
-    let gameInProgress = true; // Track whether the game is in progress or not
+    let gameInProgress = true;
 
     // Set background color based on difficulty
-    if (difficulty === "hard") {
-        document.body.style.backgroundColor = 'white'; // Change this to your desired color
-    } else {
-        document.body.style.backgroundColor = 'white'; // Default color for other modes
-    }
+    document.body.style.backgroundColor = difficulty === "hard" ? 'white' : 'white';
 
     // Hide the current player display initially
     currentPlayerDisplay.style.display = "none";
@@ -36,23 +32,22 @@ document.addEventListener("DOMContentLoaded", function () {
         for (let pattern of winPatterns) {
             const [a, b, c] = pattern;
             if (boardArray[a] && boardArray[a] === boardArray[b] && boardArray[a] === boardArray[c]) {
-                // Highlight winning cells with green only if there's a valid winner
                 board.children[a].style.backgroundColor = "#32cd32";
                 board.children[b].style.backgroundColor = "#32cd32";
                 board.children[c].style.backgroundColor = "#32cd32";
-                return boardArray[a]; // Return the winner ("X" or "O")
+                return boardArray[a];
             }
         }
 
         if (boardArray.includes("")) {
-            return null; // No winner yet, continue the game
+            return null;
         }
 
-        return "Tie"; // All cells are filled, it's a tie
+        return "Tie";
     }
 
     function handleClick(event) {
-        if (!gameInProgress) return; // Prevent clicks when the game is over
+        if (!gameInProgress) return;
 
         const cell = event.target;
         const cellIndex = Array.from(board.children).indexOf(cell);
@@ -63,12 +58,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const winner = checkWinner();
             if (winner) {
-                gameInProgress = false; // Stop the game when there's a winner or tie
-                if (winner === "Tie") {
-                    result.textContent = "It's a tie!";
-                } else {
-                    result.textContent = `${winner} wins!`;
-                }
+                gameInProgress = false;
+                result.textContent = winner === "Tie" ? "It's a tie!" : `${winner} wins!`;
             } else {
                 if (isSinglePlayer) {
                     currentPlayer = "O";
@@ -83,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function aiMove() {
-        if (!gameInProgress) return; // Avoid AI move if game is over
+        if (!gameInProgress) return;
 
         let emptyCells = boardArray.map((val, index) => val === "" ? index : null).filter(val => val !== null);
         if (emptyCells.length > 0 && !checkWinner()) {
@@ -96,18 +87,12 @@ document.addEventListener("DOMContentLoaded", function () {
             boardArray[moveIndex] = currentPlayer;
             board.children[moveIndex].textContent = currentPlayer;
 
-            // Check for winner after the AI's move
             const winner = checkWinner();
             if (winner) {
-                gameInProgress = false; // Stop the game when there's a winner or tie
-                if (winner === "Tie") {
-                    result.textContent = "It's a tie!";
-                } else {
-                    result.textContent = `${winner} wins!`;
-                }
+                gameInProgress = false;
+                result.textContent = winner === "Tie" ? "It's a tie!" : `${winner} wins!`;
             } else {
-                // Switch player after the AI move
-                currentPlayer = "X";  // Switch to player X after AI's turn
+                currentPlayer = "X";
                 currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
             }
         }
@@ -118,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let move;
         for (let i = 0; i < boardArray.length; i++) {
             if (boardArray[i] === "") {
-                boardArray[i] = "O"; // AI is "O"
+                boardArray[i] = "O";
                 let score = minimax(boardArray, 0, false);
                 boardArray[i] = "";
                 if (score > bestScore) {
@@ -172,8 +157,8 @@ document.addEventListener("DOMContentLoaded", function () {
         result.textContent = "";
         currentPlayer = "X";
         currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
-        gameInProgress = true; // Reset game state to in-progress
-        currentPlayerDisplay.style.display = "block"; // Show current player display when game starts
+        gameInProgress = true;
+        currentPlayerDisplay.style.display = "block";
 
         while (board.firstChild) {
             board.removeChild(board.firstChild);
@@ -194,14 +179,14 @@ document.addEventListener("DOMContentLoaded", function () {
             result.textContent = "";
             currentPlayer = "X";
             currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
-            gameInProgress = true; // Set game state back to in-progress
+            gameInProgress = true;
 
             Array.from(board.children).forEach(cell => {
                 cell.textContent = "";
                 cell.style.backgroundColor = "";
             });
 
-            currentPlayerDisplay.style.display = "block"; // Ensure it's visible after reset
+            currentPlayerDisplay.style.display = "block";
         }
     }
 
