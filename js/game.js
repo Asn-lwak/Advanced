@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
             boardArray[moveIndex] = currentPlayer;
             board.children[moveIndex].textContent = currentPlayer;
 
-            
+            const winner = checkWinner();
             if (winner) {
                 gameInProgress = false;
                 result.textContent = winner === "Tie" ? "It's a tie!" : `${winner} wins!`;
@@ -122,7 +122,9 @@ document.addEventListener("DOMContentLoaded", function () {
             Tie: 0
         };
 
-
+        let result = checkWinner();
+        if (result !== null) {
+            return scores[result];
         }
 
         if (isMaximizing) {
