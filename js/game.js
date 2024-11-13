@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let difficulty = new URLSearchParams(window.location.search).get("difficulty") || "easy";
     let isSinglePlayer = window.location.search.includes("difficulty");
     let gameInProgress = true;
+    let aiHasMoved = false; // Flag to track AI move
 
     // Set background color based on difficulty
     document.body.style.backgroundColor = difficulty === "hard" ? 'white' : 'white';
@@ -54,6 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (isSinglePlayer) {
                 currentPlayer = "O";
                 currentPlayerDisplay.textContent = `Current Player: ${currentPlayer}`;
+                aiHasMoved = false; // Reset AI move flag
                 setTimeout(aiMove, 500); // Delay AI move to ensure only one move per turn
             } else {
                 currentPlayer = currentPlayer === "X" ? "O" : "X";
@@ -76,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function aiMove() {
-        if (!gameInProgress) return;
+        if (!gameInProgress || aiHasMoved) return; // Ensure AI only moves once per turn
 
         let emptyCells = boardArray.map((val, index) => val === "" ? index : null).filter(val => val !== null);
         if (emptyCells.length > 0 && !checkWinner()) {
@@ -88,6 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             boardArray[moveIndex] = currentPlayer;
             board.children[moveIndex].textContent = currentPlayer;
+            aiHasMoved = true; // Set AI move flag
             endTurn();
         }
     }
