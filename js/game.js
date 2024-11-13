@@ -50,8 +50,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     return "Tie"; // All cells are filled, it's a tie
+    }
 }
-
 
     // Function to handle a click on the board
     function handleClick(event) {
