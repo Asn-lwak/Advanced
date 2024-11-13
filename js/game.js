@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const startButton = document.getElementById("start-button");
     const resetButton = document.getElementById("reset-button");
     const backButton = document.getElementById("back-button");
     const board = document.querySelector(".board");
@@ -190,10 +189,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    startButton.addEventListener("click", startGame);
     resetButton.addEventListener("click", resetGame);
 
     backButton.addEventListener("click", function () {
         window.history.back();
     });
+
+    // Automatically start the game when the page loads
+    startGame();
 });
