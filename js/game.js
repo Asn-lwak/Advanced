@@ -29,16 +29,13 @@ document.addEventListener("DOMContentLoaded", function () {
         ];
 
         for (let pattern of winPatterns) {
-             const [a, b, c] = pattern;
-             let winning = (boardArray[a] && (boardArray[a] === boardArray[b]) && (boardArray[a] === boardArray[c]));
-
-             if (winning) {
+            const [a, b, c] = pattern;
+            if (boardArray[a] && boardArray[a] === boardArray[b] && boardArray[a] === boardArray[c]) {
                 board.children[a].style.backgroundColor = "#32cd32";
                 board.children[b].style.backgroundColor = "#32cd32";
                 board.children[c].style.backgroundColor = "#32cd32";
-                console.log(Winning pattern found! Color: ${color});
-             return boardArray[a];
-             }
+                return boardArray[a];
+            }
         }
 
         if (boardArray.includes("")) {
