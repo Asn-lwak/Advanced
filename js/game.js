@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Hide the current player display initially
     currentPlayerDisplay.style.display = "none";
 
-    function checkWinner() {
+    function checkWinner(boardArray) {
         const winPatterns = [
             [0, 1, 2],
             [3, 4, 5],
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
             cell.textContent = currentPlayer;
             console.log(`Board state after move: ${boardArray}`);
 
-            const winner = checkWinner();
+            const winner = checkWinner(boardArray);
             if (winner) {
                 gameInProgress = false;
                 result.textContent = winner === "Tie" ? "It's a tie!" : `${winner} wins!`;
@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!gameInProgress) return;
 
         let emptyCells = boardArray.map((val, index) => val === "" ? index : null).filter(val => val !== null);
-        if (emptyCells.length > 0 && !checkWinner()) {
+        if (emptyCells.length > 0 && !checkWinner(boardArray)) {
             let moveIndex;
             if (difficulty === "easy") {
                 moveIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(`AI move: ${moveIndex}`);
             console.log(`Board state after AI move: ${boardArray}`);
 
-            const winner = checkWinner();
+            const winner = checkWinner(boardArray);
             if (winner) {
                 gameInProgress = false;
                 result.textContent = winner === "Tie" ? "It's a tie!" : `${winner} wins!`;
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function () {
             Tie: 0
         };
 
-        let result = checkWinner();
+        let result = checkWinner(board);
         if (result !== null) {
             return scores[result];
         }
