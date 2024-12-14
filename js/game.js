@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const [a, b, c] = pattern;
             if (boardArray[a] && boardArray[a] === boardArray[b] && boardArray[a] === boardArray[c]) {
                 console.log(`Winning pattern found: ${a}, ${b}, ${c}`);
+                console.log(`Board state: ${boardArray}`);
                 board.children[a].style.backgroundColor = "#32cd32";
                 board.children[b].style.backgroundColor = "#32cd32";
                 board.children[c].style.backgroundColor = "#32cd32";
@@ -51,10 +52,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const cell = event.target;
         const cellIndex = Array.from(board.children).indexOf(cell);
+        console.log(`Cell clicked: ${cellIndex}`);
 
         if (boardArray[cellIndex] === "") {
             boardArray[cellIndex] = currentPlayer;
             cell.textContent = currentPlayer;
+            console.log(`Board state after move: ${boardArray}`);
 
             const winner = checkWinner();
             if (winner) {
@@ -86,6 +89,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             boardArray[moveIndex] = currentPlayer;
             board.children[moveIndex].textContent = currentPlayer;
+            console.log(`AI move: ${moveIndex}`);
+            console.log(`Board state after AI move: ${boardArray}`);
 
             const winner = checkWinner();
             if (winner) {
@@ -112,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
         }
-        console.log(`Best move: ${move}`);
+        console.log(`Best move: ${move}, Score: ${bestScore}`);
         return move;
     }
 
