@@ -31,6 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
         for (let pattern of winPatterns) {
             const [a, b, c] = pattern;
             if (boardArray[a] && boardArray[a] === boardArray[b] && boardArray[a] === boardArray[c]) {
+                console.log(`Winning pattern found: ${a}, ${b}, ${c}`);
                 board.children[a].style.backgroundColor = "#32cd32";
                 board.children[b].style.backgroundColor = "#32cd32";
                 board.children[c].style.backgroundColor = "#32cd32";
@@ -111,6 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
         }
+        console.log(`Best move: ${move}`);
         return move;
     }
 
